@@ -7,32 +7,10 @@ var client = require('twilio')(cfg.twilio.clientID, cfg.twilio.token);
 
 var action = require('../config/admin');
 
-// var accountSid = "AP3a6a3c6b195651d80adb945a3f869b54";
-// var authToken = "";
-// var senderNum = ""
 
-
-/* GET users listing. */
 router.get('/fall', function(req, res, next) {
-    
-    action.forEach(function(profile){
 
-        console.log(profile);
-
-        client.sendMessage({
-            from: '+16473609283',
-            to: profile.phoneNumber,
-            body: 'I think I\'m having a stroke'
-
-        }, function(err, responseData){
-            if (!err){
-                console.log('Hello, Its me.');
-            }else{
-                console.log(err);
-            }
-
-        });
-    });
+    sendMessages('fall');
 
     res.send('lol');
 
@@ -42,11 +20,53 @@ router.get('/fall', function(req, res, next) {
 
 router.get('/stroke', function(req,res,next){
 
+    sendMessages('stroke')
+
+    res.send('lol');
+});
+
+router.get('/heartattack', function(req,res,next){
+
+    sendMessages('heartattack');
 
 });
 
-router.get('/heartattacks', function(req,res,next){
 
-});
+/* Function for sending text messages to list */
+function sendMessages(type){
+
+    var message = "";
+    switch(type){
+        case 'fall':
+            message = 'I think I\'m falling';
+            break;
+        case 'stroke':
+            message = 'I think I\'m having a stroke';
+            break;
+        case 'heartattack':
+            message = 'I think I\'m having a heart attack';
+            break;
+    }
+
+
+    action.forEach(function(profile){
+
+        console.log(profile);
+
+        client.sendMessage({
+            from: '+16473609283',
+            to: profile.phoneNumber,
+            body: message
+        }, function(err, responseData){
+            if (!err){
+                console.log('Hello, Its me.');
+            }else{
+                console.log(err);
+            }
+        });
+    });
+
+}
+
 
 module.exports = router;
