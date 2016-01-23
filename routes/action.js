@@ -1,11 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
-var cfg = require('../config/twilio');
+var cfg = require('../config/cred');
 
 var client = require('twilio')(cfg.twilio.clientID, cfg.twilio.token);
 
 var action = require('../config/admin');
+
+var NestApi = require('nest-api');
+var nestApi = new NestApi(cfg.nest.email, cfg.nest.pass);
+
+var Firebase = require('firebase');
+
 
 
 router.get('/fall', function(req, res, next) {
@@ -28,6 +34,22 @@ router.get('/stroke', function(req,res,next){
 router.get('/heartattack', function(req,res,next){
 
     sendMessages('heartattack');
+
+});
+
+router.get('/testing', function(req,res,next){
+
+    nestApi.login(function(data) {
+
+        var ref = new Firebase('wss://developer-api.nest.com');
+
+        ref.authWithCustomToken(data.access_token);
+        
+
+        
+
+
+    });
 
 });
 
