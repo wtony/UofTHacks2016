@@ -4,7 +4,7 @@ module.exports = {
         'token' : 'b93960e263ea491e6696c95019360f0c'
     },
     'nest' : {
-        'clientID' : '6623fd88-a6b1-4ed2-930b-253f57782361',
-        'clientSecret' : '9iDEvnIQlP0a0HhigkFiNn71C'
+        'email' : 'uofthacks2016@gmail.com',
+        'password' : 'T0nYyYyY?'
     }
 }

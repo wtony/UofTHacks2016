@@ -5,44 +5,9 @@ var cfg = require('../config/cred');
 
 var client = require('twilio')(cfg.twilio.clientID, cfg.twilio.token);
 
+var nest = require('unofficial-nest-api');
+
 var action = require('../config/admin');
-
-var NestApi = require('nest-api');
-var nestApi = new NestApi(cfg.nest.email, cfg.nest.pass);
-
-var Firebase = require('firebase');
-
-
-var passport = require('passport');
-var bodyParser = require('body-parser');
-var NestStrategy = require('passport-nest').Strategy;
-
-
-passport.use(new NestStrategy({
-    clientID: cfg.nest.clientID,
-    clientSecret: cfg.nest.clientSecret
-  }
-));
-
-
-/**
-  No user data is available in the Nest OAuth
-  service, just return the empty user object.
-*/
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-
-/**
-  No user data is available in the Nest OAuth
-  service, just return the empty user object.
-*/
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
-
 
 router.get('/fall', function(req, res, next) {
 
@@ -51,12 +16,35 @@ router.get('/fall', function(req, res, next) {
     res.send('lol');
 
 
+
+
 }); 
 
 
 router.get('/stroke', function(req,res,next){
 
     sendMessages('stroke')
+
+
+
+    nest.login(cfg.nest.email, cfg.nest.password, function(err, data){
+        if (err) {
+            console.log(err.message);
+            process.exit(1);
+            return;
+        }
+
+        nest.fetchStatus(function (data) {
+            for (var deviceId in data.device) {
+                if (data.device.hasOwnProperty(deviceId)) {
+                    var device = data.shared[deviceId];
+                    // here's the device and ID
+                    nest.setTemperature(deviceId, nest.ftoc(48.2));
+                }
+            }
+        });
+
+    });
 
     res.send('lol');
 });
@@ -67,30 +55,12 @@ router.get('/heartattack', function(req,res,next){
 
 });
 
-router.get('/auth/nest', passport.authenticate('nest'),function(req,res,next){
-    console.log(req);
-});
-
-/**
-  Upon return from the Nest OAuth endpoint, grab the user's
-  accessToken and set a cookie so jQuery can access, then
-  return the user back to the root app.
-*/
-router.get('/auth/nest/callback',
-        passport.authenticate('nest', { }),
-        function(req, res, next) {
-          console.log(req.user.accessToken);
-        }
-);
-
 
 router.get('/testing', function(req,res,next){
 
-    nestApi.login(function(data) {
 
         var ref = new Firebase('wss://developer-api.nest.com');
-        console.log(data.access_token);
-        ref.authWithCustomToken(data.access_token, function(err){
+        ref.authWithCustomToken(token, function(err){
             console.log(err);
         });
         
@@ -99,8 +69,6 @@ router.get('/testing', function(req,res,next){
         },function(err){
             console.log(err.code);
         });
-
-    });
 
 });
 
@@ -132,7 +100,7 @@ function sendMessages(type){
             body: message
         }, function(err, responseData){
             if (!err){
-                console.log('Hello, Its me.');
+                console.log('Hello, it\'s me.');
             }else{
                 console.log(err);
             }
