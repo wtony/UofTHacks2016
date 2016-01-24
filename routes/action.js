@@ -52,25 +52,65 @@ router.get('/stroke', function(req,res,next){
 router.get('/heartattack', function(req,res,next){
 
     sendMessages('heartattack');
-
+    res.send('lol');
 });
 
 
-router.get('/testing', function(req,res,next){
+
+router.get('/other', function(req,res,next){
+
+    sendMessages('other');
+    res.send('lol');
+});
 
 
-        var ref = new Firebase('wss://developer-api.nest.com');
-        ref.authWithCustomToken(token, function(err){
-            console.log(err);
+router.get('/hot', function(req,res,next){
+    console.log('hot');
+     nest.login(cfg.nest.email, cfg.nest.password, function(err, data){
+        if (err) {
+            console.log(err.message);
+            process.exit(1);
+            return;
+        }
+
+        nest.fetchStatus(function (data) {
+            for (var deviceId in data.device) {
+                if (data.device.hasOwnProperty(deviceId)) {
+                    var device = data.shared[deviceId];
+                    // here's the device and ID
+                    nest.setTemperature(deviceId, nest.ftoc(48.2));
+                }
+            }
         });
-        
-        ref.on("value", function(snapshot){
-            console.log(snapshot.val());
-        },function(err){
-            console.log(err.code);
+
+    });
+     res.send('lol');
+});
+
+router.get('/cold', function(req,res,next){
+    console.log('cold');
+     nest.login(cfg.nest.email, cfg.nest.password, function(err, data){
+        if (err) {
+            console.log(err.message);
+            process.exit(1);
+            return;
+        }
+
+        nest.fetchStatus(function (data) {
+            for (var deviceId in data.device) {
+                if (data.device.hasOwnProperty(deviceId)) {
+                    var device = data.shared[deviceId];
+                    // here's the device and ID
+                    nest.setTemperature(deviceId, nest.ftoc(89));
+                }
+            }
         });
+
+    });
+          res.send('lol');
 
 });
+
 
 
 /* Function for sending text messages to list */
@@ -86,6 +126,9 @@ function sendMessages(type){
             break;
         case 'heartattack':
             message = 'I think I\'m having a heart attack';
+            break;
+        case 'other':
+            message = 'You fokin wot m8.'
             break;
     }
 
