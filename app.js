@@ -5,10 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var action = require('./routes/action');
 var app = express();
+
+var passport = require('passport');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -21,6 +24,24 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+
+
+/**
+  Setup the Express app
+*/
+app.use(cookieParser('cookie_secret_shh')); // Change for production apps
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(session({
+  secret: 'session_secret_shh', // Change for production apps
+  resave: true,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/action', action);
 
