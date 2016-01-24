@@ -13,7 +13,7 @@ router.get('/fall', function(req, res, next) {
 
     sendMessages('fall');
 
-    res.send('lol');
+    res.send('fall');
 
 
 
@@ -46,13 +46,13 @@ router.get('/stroke', function(req,res,next){
 
     });
 
-    res.send('lol');
+    res.send('stroke');
 });
 
 router.get('/heartattack', function(req,res,next){
 
     sendMessages('heartattack');
-    res.send('lol');
+    res.send('heartattack');
 });
 
 
@@ -60,7 +60,7 @@ router.get('/heartattack', function(req,res,next){
 router.get('/other', function(req,res,next){
 
     sendMessages('other');
-    res.send('lol');
+    res.send('other');
 });
 
 
@@ -84,7 +84,7 @@ router.get('/hot', function(req,res,next){
         });
 
     });
-     res.send('lol');
+     res.send('hot');
 });
 
 router.get('/cold', function(req,res,next){
@@ -107,7 +107,7 @@ router.get('/cold', function(req,res,next){
         });
 
     });
-          res.send('lol');
+          res.send('cold');
 
 });
 
