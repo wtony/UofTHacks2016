@@ -128,7 +128,7 @@ function sendMessages(type){
             message = 'I think I\'m having a heart attack';
             break;
         case 'other':
-            message = 'You fokin wot m8.'
+            message = 'I need help.'
             break;
     }
 
